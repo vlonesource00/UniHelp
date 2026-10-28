@@ -1,0 +1,23 @@
+# Local credentials and user data
+.env
+.env.*
+!.env.example
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.log
+
+# Python and generated build files
+__pycache__/
+*.py[cod]
+.build_venv/
+.build_tmp/
+.release_build/
+build/
+dist/
+UniHelp/
+release/
+
+# Historical copies may contain credentials and user data
+backup_original/

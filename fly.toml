@@ -1,0 +1,35 @@
+# Servidor da comunidade UniHelp no Fly.io (usa o Dockerfile desta pasta).
+# As palavras-passe vão como segredos:  fly secrets set ADMIN_PASSWORD=... SMTP_HOST=... (nunca neste ficheiro)
+app = "unihelp-comunidade"  # tem de ser único no Fly.io; muda se já existir
+primary_region = "mad"      # Madrid, o mais perto de Portugal
+
+[env]
+  HOST = "0.0.0.0"
+  PORT = "8765"
+  UNIHELP_DB = "/data/unihelp_server.db"
+  TRUST_PROXY = "1"
+
+# disco persistente: as contas e publicações sobrevivem a reinícios (com cópias diárias automáticas)
+[[mounts]]
+  source = "unihelp_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8765
+  force_https = true
+  auto_stop_machines = "stop"   # desliga quando ninguém usa (fica mais barato) e liga no pedido seguinte
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    method = "GET"
+    path = "/health"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+
+# SQLite = uma só máquina
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
